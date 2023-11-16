@@ -1,0 +1,103 @@
+#include <iostream>
+#include <fstream>
+#include <map>
+using namespace std;
+
+void addWord(map<string, string>& dictionary) {
+    string engWord, rusWord;
+    cout << "Введите слово на английском: ";
+    cin >> engWord;
+    cout << "Введите перевод на русском: ";
+    cin >> rusWord;
+
+    // Проверяем, есть ли слово уже в словаре
+    if (dictionary.find(engWord) != dictionary.end()) {
+        cout << "Такое слово уже есть в словаре." << endl;
+    } else {
+        // Добавляем слово в словарь
+        dictionary[engWord] = rusWord;
+        cout << "Слово добавлено в словарь." << endl;
+    }
+}
+
+void printTranslation(const map<string, string>& dictionary) {
+    string engWord;
+    cout << "Введите слово на английском: ";
+    cin >> engWord;
+
+    // Проверяем, есть ли слово в словаре
+    if (dictionary.find(engWord) != dictionary.end()) {
+        cout << "Перевод: " << dictionary.at(engWord) << endl;
+    } else {
+        cout << "Такого слова нет в словаре." << endl;
+    }
+}
+
+void reverseTranslation(const map<string, string>& dictionary) {
+    string rusWord;
+    cout << "Введите слово на русском: ";
+    cin >> rusWord;
+
+    for (const auto& pair : dictionary) {
+        if (pair.second == rusWord) {
+            cout << "Перевод: " << pair.first << endl;
+            return;
+        }
+    }
+
+    cout << "Такого слова нет в словаре." << endl;
+}
+
+void saveToFile(const map<string, string>& dictionary) {
+    ofstream file("slovar.txt");
+
+    if (file.is_open()) {
+        for (const auto& pair : dictionary) {
+            file << pair.first << ":" << pair.second << endl;
+        }
+        cout << "Словарь успешно сохранен в файл." << endl;
+        file.close();
+    } else {
+        cout << "Не удалось открыть файл для сохранения словаря." << endl;
+    }
+}
+
+int main() {
+    map<string, string> dictionary;
+    int choice;
+
+    while (true) {
+        cout << "Меню:" << endl;
+        cout << "1. Ввести английское слово и вывести перевод на русском." << endl;
+        cout << "2. Ввести слово на английском и вывести перевод на русском наоборот." << endl;
+        cout << "3. Добавить новое слово в словарь." << endl;
+        cout << "4. Сохранить словарь в файл." << endl;
+        cout << "5. Выйти из программы." << endl;
+        cout << "Выберите действие: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                printTranslation(dictionary);
+                break;
+            case 2:
+                reverseTranslation(dictionary);
+                break;
+            case 3:
+                addWord(dictionary);
+                break;
+            case 4:
+                saveToFile(dictionary);
+                break;
+            case 5:
+                cout << "Выход из программы." << endl;
+                return 0;
+            default:
+                cout << "Некорректный выбор. Попробуйте еще раз." << endl;
+                break;
+        }
+    }
+
+    return 0;
+}
+
